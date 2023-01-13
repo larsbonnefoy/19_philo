@@ -6,7 +6,7 @@
 /*   By: lbonnefo <lbonnefo@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/11 14:56:43 by lbonnefo          #+#    #+#             */
-/*   Updated: 2023/01/13 15:30:58 by lbonnefo         ###   ########.fr       */
+/*   Updated: 2023/01/13 15:54:38 by lbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,4 +32,6 @@ typedef struct	s_data {
 
 int	ft_atoi_positive(char *str);
 int	init_struct(int argc, char **argv, t_data *data);
+int	check_digit(char *str);
+
 #endif

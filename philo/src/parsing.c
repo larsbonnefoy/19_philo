@@ -6,7 +6,7 @@
 /*   By: lbonnefo <lbonnefo@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/13 15:09:24 by lbonnefo          #+#    #+#             */
-/*   Updated: 2023/01/13 15:30:42 by lbonnefo         ###   ########.fr       */
+/*   Updated: 2023/01/13 15:54:41 by lbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,8 @@ int	check_input(int argc, char **argv)
 	i = 1;
 	while (i < argc) 
 	{
+		if (check_digit(argv[i]) < 0)
+			return (-1); 
 		if (ft_atoi_positive(argv[i]) <  0)
 			return (-1);
 		i++;	
