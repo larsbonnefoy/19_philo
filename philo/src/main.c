@@ -11,25 +11,18 @@
 /* ************************************************************************** */
 
 #include "philo.h"
-
 void print_struct(t_data *data);
 
 int main(int argc, char **argv)
 {
 	t_data data;
+	t_timeval tv;
 
 	if (init_struct(argc, argv, &data) == -1)
 		return (-1);
 	print_struct(&data);
-}
-
-void print_struct(t_data *data)
-{
-	printf("nbr_philo	= %d\n", data->nbr_philo);
-	printf("time_to_die	= %d\n", data->time_to_die);
-	printf("time_to_eat	= %d\n", data->time_to_eat);
-	printf("time_to_sleep	= %d\n", data->time_to_sleep);
-	printf("amount_to_eat	= %d\n", data->amount_to_eat);
+	gettimeofday(&tv, NULL);
+	init_simu(&data);
 }
 /*
 void *roll_dice()

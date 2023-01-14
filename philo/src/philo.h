@@ -20,6 +20,7 @@
 #include <sys/time.h>
 #include <limits.h>
 
+typedef struct	timeval t_timeval;
 typedef struct	s_data {
 	
 	int nbr_philo;
@@ -33,5 +34,7 @@ typedef struct	s_data {
 int	ft_atoi_positive(char *str);
 int	init_struct(int argc, char **argv, t_data *data);
 int	check_digit(char *str);
+int init_simu(t_data *data);
 
+void print_struct(t_data *data);
 #endif

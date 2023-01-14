@@ -15,12 +15,13 @@ NAME = philo
 FILES =	main.c \
 		parsing.c \
 		parsing_utils.c \
+		utils.c \
 
 SRCS= $(addprefix src/, $(FILES))
 
 OBJ = $(SRCS:.c=.o)
 
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror 
 
 $(NAME): $(OBJ)
 				cc $(CFLAGS) $(OBJ) -o $(NAME)
