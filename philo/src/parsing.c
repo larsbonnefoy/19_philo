@@ -6,7 +6,7 @@
 /*   By: lbonnefo <lbonnefo@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/13 15:09:24 by lbonnefo          #+#    #+#             */
-/*   Updated: 2023/01/13 15:54:41 by lbonnefo         ###   ########.fr       */
+/*   Updated: 2023/01/16 13:18:18 by lbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ int	check_input(int argc, char **argv);
 
 int	init_struct(int argc, char **argv, t_data *data)
 {
+	t_timeval tv;
+
 	if (check_input(argc, argv) == -1)
 	{
 		printf("Error\n");
@@ -25,6 +27,8 @@ int	init_struct(int argc, char **argv, t_data *data)
 	data->time_to_die = ft_atoi_positive(argv[2]);
 	data->time_to_eat = ft_atoi_positive(argv[3]);
 	data->time_to_sleep = ft_atoi_positive(argv[4]);
+	gettimeofday(&tv, NULL);
+	data->time = tv;
 	if (argc == 6)
 		data->amount_to_eat = ft_atoi_positive(argv[5]);
 	else

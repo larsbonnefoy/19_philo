@@ -6,7 +6,7 @@
 #    By: lbonnefo <lbonnefo@student.s19.be>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/11 14:55:28 by lbonnefo          #+#    #+#              #
-#    Updated: 2023/01/13 15:08:54 by lbonnefo         ###   ########.fr        #
+#    Updated: 2023/01/16 14:43:38 by lbonnefo         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,6 +16,7 @@ FILES =	main.c \
 		parsing.c \
 		parsing_utils.c \
 		utils.c \
+		init_simu.c \
 
 SRCS= $(addprefix src/, $(FILES))
 
