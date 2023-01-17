@@ -43,7 +43,7 @@ typedef struct	s_philo
 int	ft_atoi_positive(char *str);
 int	init_struct(int argc, char **argv, t_data *data);
 int	check_digit(char *str);
-int init_simu(t_data *data);
+int init_and_launch_simu(t_data *data);
 void *routine(void *arg);
 
 void print_struct(t_data *data);

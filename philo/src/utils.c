@@ -9,12 +9,6 @@ void print_struct(t_data *data)
 	printf("amount_to_eat	= %d\n", data->amount_to_eat);
 }
 
-void *routine(void *arg)
-{
-	t_philo *philo;
-	philo = (t_philo *)arg;
-	sleep(2);
-	return ((void *) arg); //free dans la fonction de call ou ici ?
-}
+
 
 

@@ -19,5 +19,6 @@ int main(int argc, char **argv)
 	if (init_struct(argc, argv, &data) == -1)
 		return (-1);
 	print_struct(&data);
-	init_simu(&data);
+	init_and_launch_simu(&data);
+	return (0);
 }
