@@ -71,6 +71,7 @@ int launch_simu(t_philo **philo_array)
 	nbr_philo = philo_array[0]->data->nbr_philo;
 	while (i < nbr_philo)
 	{
+		set_mutexes(philo_array[i]);
 		if (pthread_create(&philo_array[i]->th, NULL, &eat_sleep_think, philo_array[i]) != 0)
 			return -1;
 		i++;
@@ -81,7 +82,14 @@ int launch_simu(t_philo **philo_array)
 void *eat_sleep_think(void *arg)
 {
 	t_philo *philo;
-
-	philo= (t_philo *)arg;
+	int i;
+	
+	i = 0;
+	philo= (t_philo *)arg;	
+	while (i < 5)
+	{
+		print_actions(philo, i);
+		i++;
+	}
 	return (arg); //free dans la fonction de call ou ici ?
 }

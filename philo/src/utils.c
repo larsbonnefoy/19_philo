@@ -58,3 +58,14 @@ void print_actions(t_philo *philo, int action)
 	else
 		printf("Wrong action\n");
 }
+
+void set_mutexes(t_philo *philo)
+{
+	int id_philo;
+	int amount_philo;
+
+	amount_philo = philo->data->nbr_philo;
+	id_philo = philo->id_philo;
+	philo->left_fork = philo->data->mutex[id_philo];
+	philo->right_fork = philo->data->mutex[(id_philo + 1) % amount_philo];
+}

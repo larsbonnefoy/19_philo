@@ -35,8 +35,11 @@ typedef struct	s_data {
 
 typedef struct	s_philo
 {
-	int				id_philo;	
+	int				id_philo;
+	int				last_meal;
 	pthread_t		th;
+	pthread_mutex_t left_fork;
+	pthread_mutex_t right_fork;
 	t_data			*data;
 }				t_philo;
 
@@ -48,6 +51,7 @@ void	*routine(void *arg);
 int		get_time();
 void	smart_sleep(int duration);
 void	print_actions(t_philo *philo, int action);
+void set_mutexes(t_philo *philo);
 
 void	print_struct(t_data *data);
 
