@@ -6,7 +6,7 @@
 /*   By: lbonnefo <lbonnefo@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 14:40:32 by lbonnefo          #+#    #+#             */
-/*   Updated: 2023/01/16 17:17:29 by lbonnefo         ###   ########.fr       */
+/*   Updated: 2023/01/20 15:07:36 by lbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,10 @@ int init_and_launch_simu(t_data *data)
 	i = 0;
 	while (i < data->nbr_philo)
 	{
-		if (pthread_join(philo_array[i]->th, (void **) &philo_array))
+		if (pthread_join(philo_array[i]->th, (void **) &philo_array[i]))
 			return -1;
 		printf("Thread of philo %d end\n", philo_array[i]->id_philo);	
-		pthread_mutex_destroy(&philo_array[i]->mutex);
+		pthread_mutex_destroy(&philo_array[i]->data->mutex[i]);
 		i++;
 	}
 	printf("main thread end\n");
@@ -55,7 +55,7 @@ t_philo **init_philo(t_data *data)
 			return (NULL); //free d'abord tous les philos -> fcts a faire
 		philo_array[i]->id_philo = i;
 		philo_array[i]->data = data;	
-		if (pthread_mutex_init(&philo_array[i]->mutex, NULL) != 0)
+		if (pthread_mutex_init(&philo_array[i]->data->mutex[i], NULL) != 0)
 			return (NULL); //free d'abord tous les philos -> fcts a faire
 		i++;
 	}
@@ -71,27 +71,17 @@ int launch_simu(t_philo **philo_array)
 	nbr_philo = philo_array[0]->data->nbr_philo;
 	while (i < nbr_philo)
 	{
-		if (pthread_create(&philo_array[i]->th, NULL, &eat_sleep_think, philo_array) != 0)
+		if (pthread_create(&philo_array[i]->th, NULL, &eat_sleep_think, philo_array[i]) != 0)
 			return -1;
 		i++;
 	}
 	return (0);
 }
-//le soucis mtn c'est que chaque thread a acces a tous les philos
+
 void *eat_sleep_think(void *arg)
 {
-	int i;
-	int nbr_philo;
+	t_philo *philo;
 
-	t_philo **philo_array;
-	philo_array = (t_philo **)arg;
-	nbr_philo = philo_array[0]->data->nbr_philo;
-	i = 0;
-	while (i < nbr_philo)
-	{
-		if (i == philo_array[i]->id_philo)
-			printf("philo nbr %d\n", philo_array[i]->id_philo);
-		i++;
-	}
-	return ((void *) arg); //free dans la fonction de call ou ici ?
+	philo= (t_philo *)arg;
+	return (arg); //free dans la fonction de call ou ici ?
 }

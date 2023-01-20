@@ -6,7 +6,7 @@
 #    By: lbonnefo <lbonnefo@student.s19.be>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/11 14:55:28 by lbonnefo          #+#    #+#              #
-#    Updated: 2023/01/16 14:43:38 by lbonnefo         ###   ########.fr        #
+#    Updated: 2023/01/19 15:01:30 by lbonnefo         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,7 +22,7 @@ SRCS= $(addprefix src/, $(FILES))
 
 OBJ = $(SRCS:.c=.o)
 
-CFLAGS = -Wall -Wextra -Werror 
+CFLAGS = -Wall -Wextra -Werror -fsanitize=address -g 
 
 $(NAME): $(OBJ)
 				cc $(CFLAGS) $(OBJ) -o $(NAME)
