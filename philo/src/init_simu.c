@@ -6,15 +6,16 @@
 /*   By: lbonnefo <lbonnefo@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 14:40:32 by lbonnefo          #+#    #+#             */
-/*   Updated: 2023/01/20 15:07:36 by lbonnefo         ###   ########.fr       */
+/*   Updated: 2023/01/21 17:34:36 by lbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
 t_philo	**init_philo(t_data *data);
-int		launch_simu(t_philo **philo_array);
+int		launch_simu(t_philo **philo_array, t_data *data);
 void	*eat_sleep_think(void *arg);
+void	use_forks(t_philo *philo, int take_forks);
 
 int init_and_launch_simu(t_data *data)
 {
@@ -23,9 +24,9 @@ int init_and_launch_simu(t_data *data)
 
 	philo_array = init_philo(data);
 	if (philo_array == NULL)
-		return (-1);
-	if (launch_simu(philo_array) == -1)
-		return (-1);
+		return (0);
+	if (launch_simu(philo_array, data) == -1)
+		return (0);
 	i = 0;
 	while (i < data->nbr_philo)
 	{
@@ -36,7 +37,7 @@ int init_and_launch_simu(t_data *data)
 		i++;
 	}
 	printf("main thread end\n");
-	return (0);
+	return (1);
 }
 
 t_philo **init_philo(t_data *data)
@@ -49,47 +50,74 @@ t_philo **init_philo(t_data *data)
 		return (NULL);
 	i = 0;
 	while (i < data->nbr_philo)
-	{
+	{	
 		philo_array[i] = malloc(sizeof(t_philo));
 		if (philo_array[i] == NULL)
-			return (NULL); //free d'abord tous les philos -> fcts a faire
-		philo_array[i]->id_philo = i;
+			return (0); //free d'abord tous les philos -> fcts a faire
+		philo_array[i]->id_philo = i + 1;
+		philo_array[i]->last_meal = 0;
 		philo_array[i]->data = data;	
+		philo_array[i]->left_fork = data->mutex[i];
+		philo_array[i]->right_fork = philo_array[i]->data->mutex[(i + 1) % (data->nbr_philo)];
 		if (pthread_mutex_init(&philo_array[i]->data->mutex[i], NULL) != 0)
-			return (NULL); //free d'abord tous les philos -> fcts a faire
+			return (0); //free d'abord tous les philos -> fcts a faire
 		i++;
 	}
 	return (philo_array);
 }
 
-int launch_simu(t_philo **philo_array)
+int launch_simu(t_philo **philo_array, t_data *data)
 {
 	int i;
 	int nbr_philo;
 
 	i = 0;
-	nbr_philo = philo_array[0]->data->nbr_philo;
+	nbr_philo = data->nbr_philo;
 	while (i < nbr_philo)
 	{
-		set_mutexes(philo_array[i]);
 		if (pthread_create(&philo_array[i]->th, NULL, &eat_sleep_think, philo_array[i]) != 0)
-			return -1;
+			return (0);
+		//usleep(100);
 		i++;
 	}
-	return (0);
+	return (1);
 }
 
 void *eat_sleep_think(void *arg)
 {
 	t_philo *philo;
-	int i;
-	
-	i = 0;
-	philo= (t_philo *)arg;	
-	while (i < 5)
+	int	amount_eat;
+	//dans data mettre une condition de philo_alive, si elle est set a 0 dead 
+	//definir une variable dans le thread meme qui va compter le nombre de fois qu il reste au philo a man		ger 
+	philo = (t_philo *)arg;	
+	amount_eat = philo->data->amount_to_eat;
+	while (run_thread(philo) && amount_eat != 0)	
 	{
-		print_actions(philo, i);
-		i++;
+		use_forks(philo, 1);
+		print_actions(philo, 1);
+		amount_eat =-1;
+		smart_sleep(philo->data->time_to_eat);
+		philo->last_meal = get_time() - philo->data->start_t;
+		use_forks(philo, 0);			
+		print_actions(philo, 2);
+		smart_sleep(philo->data->time_to_sleep);
+		print_actions(philo, 3);
 	}
 	return (arg); //free dans la fonction de call ou ici ?
+}
+
+void use_forks(t_philo *philo, int take_forks)
+{
+	if (take_forks == 1)
+	{
+		pthread_mutex_lock(&philo->left_fork);
+		print_actions(philo, 0);
+		pthread_mutex_lock(&philo->right_fork);
+		print_actions(philo, 0);
+	}
+	else
+	{
+		pthread_mutex_unlock(&philo->left_fork);
+		pthread_mutex_unlock(&philo->left_fork);
+	}
 }

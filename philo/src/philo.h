@@ -6,7 +6,7 @@
 /*   By: lbonnefo <lbonnefo@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/11 14:56:43 by lbonnefo          #+#    #+#             */
-/*   Updated: 2023/01/20 15:07:40 by lbonnefo         ###   ########.fr       */
+/*   Updated: 2023/01/21 14:21:53 by lbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,10 @@ typedef struct	s_data {
 	int 			time_to_eat;
 	int				time_to_sleep;
 	int				amount_to_eat;
-	pthread_mutex_t	*mutex; //avoir ici l'array de mutex pour pouvoir acceder a n'importe quel mutex
+	pthread_mutex_t	*mutex; 
 	int				start_t;
+	int				philo_alive;
+	pthread_mutex_t	mutex_alive;
 }				t_data;
 
 typedef struct	s_philo
@@ -51,7 +53,7 @@ void	*routine(void *arg);
 int		get_time();
 void	smart_sleep(int duration);
 void	print_actions(t_philo *philo, int action);
-void set_mutexes(t_philo *philo);
+int		run_thread(t_philo *philo);
 
 void	print_struct(t_data *data);
 

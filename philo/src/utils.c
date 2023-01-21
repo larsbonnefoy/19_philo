@@ -6,11 +6,14 @@
 /*   By: lbonnefo <lbonnefo@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 12:59:22 by lbonnefo          #+#    #+#             */
-/*   Updated: 2023/01/20 15:07:37 by lbonnefo         ###   ########.fr       */
+/*   Updated: 2023/01/21 16:57:02 by lbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+int	check_philo_alive(t_philo *philo, int mod_key);
+void print_actions(t_philo *philo, int action);
 
 void print_struct(t_data *data)
 {
@@ -59,13 +62,44 @@ void print_actions(t_philo *philo, int action)
 		printf("Wrong action\n");
 }
 
-void set_mutexes(t_philo *philo)
+int		run_thread(t_philo *philo)
 {
-	int id_philo;
-	int amount_philo;
+	t_data	*data;
+	int 	time_of_check;
 
-	amount_philo = philo->data->nbr_philo;
-	id_philo = philo->id_philo;
-	philo->left_fork = philo->data->mutex[id_philo];
-	philo->right_fork = philo->data->mutex[(id_philo + 1) % amount_philo];
+	data = philo->data;
+	time_of_check = get_time() - philo->data->start_t;
+	if (check_philo_alive(philo, 0) == 0)
+		return (0);
+	else if (philo->last_meal + data->time_to_die < time_of_check)//si il vient de mourir, changer la value et end	
+	{
+		check_philo_alive(philo, 1);
+		return (0);
+	}
+	return (1);
+}
+
+int	check_philo_alive(t_philo *philo, int mod_key)
+{
+	t_data *data;
+
+	data = philo->data;
+	pthread_mutex_lock(&data->mutex_alive);
+	if (mod_key == 0)
+	{
+		if (!data->philo_alive)
+		{
+			pthread_mutex_unlock(&data->mutex_alive);
+			return (0);
+		}
+		pthread_mutex_unlock(&data->mutex_alive);
+		return (1);
+	}
+	else 
+	{
+		data->philo_alive = 0;
+		print_actions(philo, 4);
+		pthread_mutex_unlock(&data->mutex_alive);
+		return (0);
+	}
 }

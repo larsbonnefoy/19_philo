@@ -1,3 +1,0 @@
-si un philo meurt, retirer le mutex en question?
-mutex = token d'accessiblité => ici il faut 2 tokens qui sont l'indice du philo + (-1)
-if mutex[n] et n[n-1] dispo alors eat sinon reste
