@@ -40,21 +40,23 @@ typedef struct	s_philo
 	int				id_philo;
 	int				last_meal;
 	pthread_t		th;
-	pthread_mutex_t left_fork;
-	pthread_mutex_t right_fork;
+	pthread_mutex_t *left_fork;
+	pthread_mutex_t *right_fork;
 	t_data			*data;
 }				t_philo;
 
+//parsing
 int		ft_atoi_positive(char *str);
 int		init_data(int argc, char **argv, t_data *data);
 int		check_digit(char *str);
+
 int		init_and_launch_simu(t_data *data);
-void	*routine(void *arg);
+
+//utils
 int		get_time();
 void	smart_sleep(int duration);
 void	print_actions(t_philo *philo, int action);
 int		run_thread(t_philo *philo);
-
-void	print_struct(t_data *data);
+void	free_all(t_philo **philo_array,t_data *data);
 
 #endif

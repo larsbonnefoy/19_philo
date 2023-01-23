@@ -15,15 +15,6 @@
 int	check_philo_alive(t_philo *philo, int mod_key);
 void print_actions(t_philo *philo, int action);
 
-void print_struct(t_data *data)
-{
-	printf("nbr_philo	= %d\n", data->nbr_philo);
-	printf("time_to_die	= %d\n", data->time_to_die);
-	printf("time_to_eat	= %d\n", data->time_to_eat);
-	printf("time_to_sleep	= %d\n", data->time_to_sleep);
-	printf("amount_to_eat	= %d\n", data->amount_to_eat);
-}
-
 int get_time()
 {
 	t_timeval 	current_t;
@@ -58,6 +49,8 @@ void print_actions(t_philo *philo, int action)
 		printf("%d %d is thinking\n", action_time, philo->id_philo);
 	else if (action == 4)
 		printf("%d %d died\n", action_time, philo->id_philo);
+	else if (action == 5)
+		printf("%d %d dropped forks\n", action_time, philo->id_philo);
 	else
 		printf("Wrong action\n");
 }
@@ -102,4 +95,20 @@ int	check_philo_alive(t_philo *philo, int mod_key)
 		pthread_mutex_unlock(&data->mutex_alive);
 		return (0);
 	}
+}
+
+void free_all(t_philo **philo_array, t_data *data)
+{
+	int i;
+	int nbr_philo;
+
+	i = 0;
+	nbr_philo = philo_array[0]->data->nbr_philo;
+	while (i < nbr_philo)
+	{
+		free(philo_array[i]);	
+		i++;
+	}
+	free(philo_array);
+	free(data->mutex);
 }

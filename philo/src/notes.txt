@@ -1,0 +1,5 @@
+trucs a free
+philo_array
+	->philo dans philo arrays
+destroy mutex
+	->array de mutex

@@ -16,9 +16,9 @@ void print_struct(t_data *data);
 int main(int argc, char **argv)
 {
 	t_data data;
+
 	if (init_data(argc, argv, &data) == -1)
 		return (-1);
-	print_struct(&data);
 	init_and_launch_simu(&data);
 	return (0);
 }
