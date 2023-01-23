@@ -6,7 +6,7 @@
 /*   By: lbonnefo <lbonnefo@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 14:40:32 by lbonnefo          #+#    #+#             */
-/*   Updated: 2023/01/21 17:34:36 by lbonnefo         ###   ########.fr       */
+/*   Updated: 2023/01/23 16:23:46 by lbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,22 +90,20 @@ void *eat_sleep_think(void *arg)
 
 	philo = (t_philo *)arg;	
 	amount_eat = philo->data->amount_to_eat;
-	while (run_thread(philo) && amount_eat != 0)	
+	while (amount_eat != 0)	
 	{
 		print_actions(philo, 3);
 		use_forks(philo, 1);
-		print_actions(philo, 1);
-		amount_eat =-1;
-		smart_sleep(philo->data->time_to_eat);
-		if (run_thread(philo) == 0)
-			break;
+		amount_eat -=1;
 		philo->last_meal = get_time() - philo->data->start_t;
 		printf("last meal of %d set to - %d\n", philo->id_philo,philo->last_meal);
+		print_actions(philo, 1);
+		if (!smart_sleep(philo->data->time_to_eat, philo))
+			return (arg);
 		use_forks(philo, 0);			
 		print_actions(philo, 2);
-		smart_sleep(philo->data->time_to_sleep);
-		if (run_thread(philo) == 0)
-			break;
+		if (!smart_sleep(philo->data->time_to_sleep, philo))
+			return (arg);
 	}
 	return (arg); //free dans la fonction de call ou ici ?
 }
@@ -114,15 +112,21 @@ void use_forks(t_philo *philo, int take_forks)
 {
 	if (take_forks == 1)
 	{
-		pthread_mutex_lock(philo->right_fork);
-		print_actions(philo, 0);
-		pthread_mutex_lock(philo->left_fork);
-		print_actions(philo, 0);
-		return ;
+		while (1)
+		{
+			if (!run_thread(philo))
+			{
+				pthread_mutex_lock(philo->right_fork);
+				print_actions(philo, 0);
+				pthread_mutex_lock(philo->left_fork);
+				print_actions(philo, 0);
+			}
+			return ;
+		}
 	}
 	else
 	{
-		pthread_mutex_unlock(philo->left_fork);
+		pthread_mutex_unlock(philo->right_fork);
 		pthread_mutex_unlock(philo->left_fork);
 		print_actions(philo, 5);
 	}

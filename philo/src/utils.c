@@ -6,7 +6,7 @@
 /*   By: lbonnefo <lbonnefo@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 12:59:22 by lbonnefo          #+#    #+#             */
-/*   Updated: 2023/01/21 16:57:02 by lbonnefo         ###   ########.fr       */
+/*   Updated: 2023/01/23 14:50:50 by lbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,13 +25,18 @@ int get_time()
 	return (mill_sec);
 }
 
-void	smart_sleep(int duration)
+int	smart_sleep(int duration,t_philo *philo)
 {
 	int	start_time; 
 
 	start_time = get_time();
 	while (get_time() - duration < start_time)
+	{
+		if (!run_thread(philo))
+			return (0);
 		usleep(100);
+	}
+	return (1);
 }
 
 void print_actions(t_philo *philo, int action)

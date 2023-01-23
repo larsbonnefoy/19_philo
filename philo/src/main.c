@@ -6,12 +6,11 @@
 /*   By: lbonnefo <lbonnefo@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/11 14:58:58 by lbonnefo          #+#    #+#             */
-/*   Updated: 2023/01/20 13:42:31 by lbonnefo         ###   ########.fr       */
+/*   Updated: 2023/01/23 13:12:43 by lbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-void print_struct(t_data *data);
 
 int main(int argc, char **argv)
 {
