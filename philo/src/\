@@ -6,7 +6,7 @@
 /*   By: lbonnefo <lbonnefo@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 14:40:32 by lbonnefo          #+#    #+#             */
-/*   Updated: 2023/01/25 18:59:04 by lbonnefo         ###   ########.fr       */
+/*   Updated: 2023/01/25 18:58:35 by lbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,8 @@ int launch_simu(t_philo **philo_array)
 	nbr_philo = philo_array[0]->data->nbr_philo;
 	while (i < nbr_philo)
 	{
+		if (i % 2 == 1)
+			usleep(100);
 		if (pthread_create(&philo_array[i]->th, NULL, &eat_sleep_think, philo_array[i]) != 0)
 			return (0);
 		i++;

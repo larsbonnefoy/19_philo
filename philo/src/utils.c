@@ -6,13 +6,12 @@
 /*   By: lbonnefo <lbonnefo@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 12:59:22 by lbonnefo          #+#    #+#             */
-/*   Updated: 2023/01/23 14:50:50 by lbonnefo         ###   ########.fr       */
+/*   Updated: 2023/01/25 18:53:23 by lbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	check_philo_alive(t_philo *philo, int mod_key);
 void print_actions(t_philo *philo, int action);
 
 int get_time()
@@ -25,17 +24,15 @@ int get_time()
 	return (mill_sec);
 }
 
-int	smart_sleep(int duration,t_philo *philo)
+int	smart_sleep(int duration, t_philo *philo)
 {
 	int	start_time; 
 
 	start_time = get_time();
 	while (get_time() - duration < start_time)
-	{
-		if (!run_thread(philo))
+		if (!check_philo_alive(philo))
 			return (0);
 		usleep(100);
-	}
 	return (1);
 }
 
@@ -43,6 +40,8 @@ void print_actions(t_philo *philo, int action)
 {
 	int action_time;
 
+	if (!check_philo_alive(philo))
+		return ;
 	action_time = get_time() - philo->data->start_t;
 	if (action == 0)
 		printf("%d %d has taken a fork\n", action_time, philo->id_philo);
@@ -52,54 +51,45 @@ void print_actions(t_philo *philo, int action)
 		printf("%d %d is sleeping\n", action_time, philo->id_philo);
 	else if (action == 3)
 		printf("%d %d is thinking\n", action_time, philo->id_philo);
-	else if (action == 4)
-		printf("%d %d died\n", action_time, philo->id_philo);
-	else if (action == 5)
-		printf("%d %d dropped forks\n", action_time, philo->id_philo);
-	else
-		printf("Wrong action\n");
 }
 
-int		run_thread(t_philo *philo)
+int		run_thread(t_philo **philo_array)
 {
 	t_data	*data;
 	int 	time_of_check;
+	int		i;
+	t_philo *philo;
 
-	data = philo->data;
-	time_of_check = get_time() - philo->data->start_t;
-	if (check_philo_alive(philo, 0) == 0)
-		return (0);
-	else if (philo->last_meal + data->time_to_die < time_of_check)//si il vient de mourir, changer la value et end	
+	i = 0;
+	philo = NULL;
+	data = philo_array[0]->data;
+	while (i < data->nbr_philo)
 	{
-		check_philo_alive(philo, 1);
-		return (0);
+		philo = philo_array[i];
+		time_of_check = get_time() - philo->data->start_t;
+		if (philo->last_meal + data->time_to_die < time_of_check)//si il vient de mourir, changer la value et end	
+		{
+			data->philo_alive = 0;
+			printf("%d %d died\n", time_of_check, philo->id_philo);
+			return (0);
+		}
+		i++;
 	}
 	return (1);
 }
 
-int	check_philo_alive(t_philo *philo, int mod_key)
+int check_philo_alive(t_philo *philo)
 {
-	t_data *data;
-
-	data = philo->data;
+	t_data *data = philo->data;
+	
 	pthread_mutex_lock(&data->mutex_alive);
-	if (mod_key == 0)
+	if (!data->philo_alive)
 	{
-		if (!data->philo_alive)
-		{
-			pthread_mutex_unlock(&data->mutex_alive);
-			return (0);
-		}
 		pthread_mutex_unlock(&data->mutex_alive);
-		return (1);
+		return (0);	
 	}
-	else 
-	{
-		data->philo_alive = 0;
-		print_actions(philo, 4);
-		pthread_mutex_unlock(&data->mutex_alive);
-		return (0);
-	}
+	pthread_mutex_unlock(&data->mutex_alive);
+	return (1);
 }
 
 void free_all(t_philo **philo_array, t_data *data)

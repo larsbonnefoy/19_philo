@@ -6,7 +6,7 @@
 /*   By: lbonnefo <lbonnefo@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/11 14:56:43 by lbonnefo          #+#    #+#             */
-/*   Updated: 2023/01/23 14:44:33 by lbonnefo         ###   ########.fr       */
+/*   Updated: 2023/01/25 18:14:32 by lbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,8 @@ int		init_and_launch_simu(t_data *data);
 int		get_time();
 int		smart_sleep(int duration, t_philo *philo);
 void	print_actions(t_philo *philo, int action);
-int		run_thread(t_philo *philo);
+int		run_thread(t_philo **philo_array);
 void	free_all(t_philo **philo_array,t_data *data);
+int		check_philo_alive(t_philo *philo);
 
 #endif
