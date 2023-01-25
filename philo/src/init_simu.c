@@ -6,7 +6,7 @@
 /*   By: lbonnefo <lbonnefo@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 14:40:32 by lbonnefo          #+#    #+#             */
-/*   Updated: 2023/01/23 16:23:46 by lbonnefo         ###   ########.fr       */
+/*   Updated: 2023/01/25 13:40:24 by lbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,17 +112,10 @@ void use_forks(t_philo *philo, int take_forks)
 {
 	if (take_forks == 1)
 	{
-		while (1)
-		{
-			if (!run_thread(philo))
-			{
-				pthread_mutex_lock(philo->right_fork);
-				print_actions(philo, 0);
-				pthread_mutex_lock(philo->left_fork);
-				print_actions(philo, 0);
-			}
-			return ;
-		}
+		pthread_mutex_lock(philo->right_fork);
+		print_actions(philo, 0);
+		pthread_mutex_lock(philo->left_fork);
+		print_actions(philo, 0);
 	}
 	else
 	{
