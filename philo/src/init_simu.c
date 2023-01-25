@@ -96,6 +96,8 @@ void *eat_sleep_think(void *arg)
 
 	philo = (t_philo *)arg;	
 	amount_eat = philo->data->amount_to_eat;
+	if (philo->id_philo % 2 == 0 )
+		smart_sleep(philo->data->time_to_die / 4, philo);
 	while (amount_eat != 0 && philo->data->philo_alive)	
 	{
 		print_actions(philo, 3);
