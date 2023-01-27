@@ -6,7 +6,7 @@
 #    By: lbonnefo <lbonnefo@student.s19.be>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/11 14:55:28 by lbonnefo          #+#    #+#              #
-#    Updated: 2023/01/27 15:53:26 by lbonnefo         ###   ########.fr        #
+#    Updated: 2023/01/27 19:22:23 by lbonnefo         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,9 @@ FILES =	main.c \
 		parsing.c \
 		parsing_utils.c \
 		utils.c \
-		init_simu.c \
+		eat_sleep_think.c \
+		init_run_simu.c \
+		thread_management.c 
 
 SRCS= $(addprefix src/, $(FILES))
 
