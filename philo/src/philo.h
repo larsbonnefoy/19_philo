@@ -6,7 +6,7 @@
 /*   By: lbonnefo <lbonnefo@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/11 14:56:43 by lbonnefo          #+#    #+#             */
-/*   Updated: 2023/01/27 17:45:20 by lbonnefo         ###   ########.fr       */
+/*   Updated: 2023/01/27 19:27:51 by lbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,11 @@
 #include <pthread.h>
 #include <sys/time.h>
 #include <limits.h>
+
+#define FORK 0
+#define EAT 1
+#define SLEEP 2
+#define THINK 3
 
 typedef struct	timeval t_timeval;
 
@@ -52,14 +57,21 @@ int		ft_atoi_positive(char *str);
 int		init_data(int argc, char **argv, t_data *data);
 int		check_digit(char *str);
 
+//init_run_simu.c
 int		init_and_launch_simu(t_data *data);
+
+//manage thread
+int		run_thread(t_philo **philo_array);
+int		check_philo_alive(t_philo *philo);
+int		finished_eating(t_data *data, int nbr_start_philo);
+
+//routine
+void	*eat_sleep_think(void *arg);
+
 //utils
 int		get_time();
 int		smart_sleep(int duration, t_philo *philo);
 void	print_actions(t_philo *philo, int action);
-int		run_thread(t_philo **philo_array);
 void	free_all(t_philo **philo_array,t_data *data);
-int		check_philo_alive(t_philo *philo);
-int		death_thread(t_data *data, int nbr_start_philo);
 
 #endif

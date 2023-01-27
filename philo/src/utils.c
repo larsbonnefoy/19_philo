@@ -6,13 +6,11 @@
 /*   By: lbonnefo <lbonnefo@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 12:59:22 by lbonnefo          #+#    #+#             */
-/*   Updated: 2023/01/27 15:52:33 by lbonnefo         ###   ########.fr       */
+/*   Updated: 2023/01/27 19:29:30 by lbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-void print_actions(t_philo *philo, int action);
 
 int get_time()
 {
@@ -57,47 +55,6 @@ void print_actions(t_philo *philo, int action)
 	pthread_mutex_unlock(&philo->data->log);
 }
 
-int		run_thread(t_philo **philo_array)
-{
-	t_data	*data;
-	int 	time_of_check;
-	int		i;
-	t_philo *philo;
-
-	i = 0;
-	philo = NULL;
-	data = philo_array[0]->data;
-	while (i < data->active_phil)
-	{
-		philo = philo_array[i];
-		time_of_check = get_time() - philo->data->start_t;
-		if (philo->last_meal + data->time_to_die < time_of_check)//si il vient de mourir, changer la value et end	
-		{
-			pthread_mutex_lock(&data->mutex_alive);
-			data->philo_alive = 0;
-			printf("%d %d died\n", time_of_check, philo->id_philo);
-			pthread_mutex_unlock(&data->mutex_alive);
-			return (0);
-		}
-		i++;
-	}
-	return (1);
-}
-
-int check_philo_alive(t_philo *philo)
-{
-	t_data *data = philo->data;
-	
-	pthread_mutex_lock(&data->mutex_alive);
-	if (!data->philo_alive)
-	{
-		pthread_mutex_unlock(&data->mutex_alive);
-		return (0);	
-	}
-	pthread_mutex_unlock(&data->mutex_alive);
-	return (1);
-}
-
 void free_all(t_philo **philo_array, t_data *data)
 {
 	int i;
@@ -112,16 +69,4 @@ void free_all(t_philo **philo_array, t_data *data)
 	}
 	free(philo_array);
 	free(data->mutex);
-}
-
-int	death_thread(t_data *data, int nbr_start_philo)
-{
-	pthread_mutex_lock(&data->mutex_active);
-	if (data->active_phil != nbr_start_philo)
-	{
-		pthread_mutex_unlock(&data->mutex_active);
-		return (0);
-	}	
-	pthread_mutex_unlock(&data->mutex_active);
-	return (1);
 }
