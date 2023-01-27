@@ -6,7 +6,7 @@
 /*   By: lbonnefo <lbonnefo@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 14:40:32 by lbonnefo          #+#    #+#             */
-/*   Updated: 2023/01/25 18:59:04 by lbonnefo         ###   ########.fr       */
+/*   Updated: 2023/01/26 11:55:53 by lbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ void *eat_sleep_think(void *arg)
 	philo = (t_philo *)arg;	
 	amount_eat = philo->data->amount_to_eat;
 	if (philo->id_philo % 2 == 0 )
-		smart_sleep(philo->data->time_to_die / 4, philo);
+		smart_sleep(philo->data->time_to_die / 2, philo);
 	while (amount_eat != 0 && philo->data->philo_alive)	
 	{
 		print_actions(philo, 3);
