@@ -6,7 +6,7 @@
 /*   By: lbonnefo <lbonnefo@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/27 19:20:29 by lbonnefo          #+#    #+#             */
-/*   Updated: 2023/01/27 19:27:55 by lbonnefo         ###   ########.fr       */
+/*   Updated: 2023/01/29 13:56:29 by lbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ int		run_thread(t_philo **philo_array)
 	int 	time_of_check;
 	int		i;
 	t_philo *philo;
+	int		last_meal_time_to_die;
 
 	i = 0;
 	philo = NULL;

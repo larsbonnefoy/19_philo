@@ -6,7 +6,7 @@
 /*   By: lbonnefo <lbonnefo@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/11 14:56:43 by lbonnefo          #+#    #+#             */
-/*   Updated: 2023/01/27 19:27:51 by lbonnefo         ###   ########.fr       */
+/*   Updated: 2023/01/29 12:49:31 by lbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ typedef struct	s_data {
 	int				philo_alive;
 	pthread_mutex_t	*mutex_alive;
 	pthread_mutex_t	*mutex_active;
-	pthread_mutex_t	*log;
+	pthread_mutex_t	*mutex_log;
 }				t_data;
 
 typedef struct	s_philo

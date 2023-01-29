@@ -6,7 +6,7 @@
 /*   By: lbonnefo <lbonnefo@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/27 19:08:30 by lbonnefo          #+#    #+#             */
-/*   Updated: 2023/01/27 19:29:35 by lbonnefo         ###   ########.fr       */
+/*   Updated: 2023/01/29 13:56:31 by lbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ void *eat_sleep_think(void *arg)
 		if (!sleeping(philo))
 			return (arg);
 	}
-	//ici data race??? idk why
 	pthread_mutex_lock(philo->data->mutex_active);
 	philo->data->active_phil--;
 	pthread_mutex_unlock(philo->data->mutex_active);

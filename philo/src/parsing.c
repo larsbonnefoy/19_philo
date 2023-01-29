@@ -6,7 +6,7 @@
 /*   By: lbonnefo <lbonnefo@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/13 15:09:24 by lbonnefo          #+#    #+#             */
-/*   Updated: 2023/01/27 11:46:19 by lbonnefo         ###   ########.fr       */
+/*   Updated: 2023/01/29 12:49:30 by lbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,27 +24,30 @@ int	init_data(int argc, char **argv, t_data *data)
 	data->time_to_sleep = ft_atoi_positive(argv[4]);
 	data->start_t = get_time(); 
 	data->philo_alive = 1;	
+	data->mutex = malloc(sizeof(pthread_mutex_t) * data->active_phil);
+	data->mutex_alive = malloc(sizeof(pthread_mutex_t) * 1);
+	data->mutex_active = malloc(sizeof(pthread_mutex_t));
+	data->mutex_log = malloc(sizeof(pthread_mutex_t));
+	if (data->mutex == NULL)
+		return (0);
 	if (pthread_mutex_init(data->mutex_alive, NULL) != 0)
-		return (-1); 
-	if (pthread_mutex_init(data->log, NULL) != 0)
+		return (0); 
+	if (pthread_mutex_init(data->mutex_log, NULL) != 0)
 	{
 		pthread_mutex_destroy(data->mutex_alive);
-		return (-1); 
+		return (0); 
 	}
 	if (pthread_mutex_init(data->mutex_active, NULL) != 0)
 	{
 		pthread_mutex_destroy(data->mutex_alive);
-		pthread_mutex_destroy(data->log);
-		return (-1); 
+		pthread_mutex_destroy(data->mutex_log);
+		return (0); 
 	}
 	if (argc == 6)
 		data->amount_to_eat = ft_atoi_positive(argv[5]);
 	else
 		data->amount_to_eat = -1; 
-	data->mutex = malloc(sizeof(pthread_mutex_t) * data->active_phil);
-	if (data->mutex == NULL)
-		return (-1);
-	return (0);
+	return (1);
 }
 
 int	check_input(int argc, char **argv)
