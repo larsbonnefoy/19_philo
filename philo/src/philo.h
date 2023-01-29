@@ -6,7 +6,7 @@
 /*   By: lbonnefo <lbonnefo@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/11 14:56:43 by lbonnefo          #+#    #+#             */
-/*   Updated: 2023/01/29 12:49:31 by lbonnefo         ###   ########.fr       */
+/*   Updated: 2023/01/29 14:24:56 by lbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ typedef struct	s_philo
 	pthread_t		th;
 	pthread_mutex_t *left_fork;
 	pthread_mutex_t *right_fork;
+	pthread_mutex_t mutex_last_meal;
 	t_data			*data;
 }				t_philo;
 
@@ -67,6 +68,7 @@ int		finished_eating(t_data *data, int nbr_start_philo);
 
 //routine
 void	*eat_sleep_think(void *arg);
+int		use_forks(t_philo *philo, int take_forks);
 
 //utils
 int		get_time();

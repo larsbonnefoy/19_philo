@@ -6,7 +6,7 @@
 /*   By: lbonnefo <lbonnefo@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/27 19:20:29 by lbonnefo          #+#    #+#             */
-/*   Updated: 2023/01/29 13:56:29 by lbonnefo         ###   ########.fr       */
+/*   Updated: 2023/01/29 14:26:21 by lbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int		run_thread(t_philo **philo_array)
 	int 	time_of_check;
 	int		i;
 	t_philo *philo;
-	int		last_meal_time_to_die;
+	int		last_meal;
 
 	i = 0;
 	philo = NULL;
@@ -27,7 +27,10 @@ int		run_thread(t_philo **philo_array)
 	{
 		philo = philo_array[i];
 		time_of_check = get_time() - philo->data->start_t;
-		if (philo->last_meal + data->time_to_die < time_of_check)//si il vient de mourir, changer la value et end	
+		pthread_mutex_lock(&philo->mutex_last_meal);
+		last_meal = philo->last_meal;
+		pthread_mutex_unlock(&philo->mutex_last_meal);
+		if (last_meal + data->time_to_die < time_of_check)//si il vient de mourir, changer la value et end	
 		{
 			pthread_mutex_lock(data->mutex_alive);
 			data->philo_alive = 0;

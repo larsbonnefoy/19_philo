@@ -6,7 +6,7 @@
 /*   By: lbonnefo <lbonnefo@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/27 19:08:30 by lbonnefo          #+#    #+#             */
-/*   Updated: 2023/01/29 13:56:31 by lbonnefo         ###   ########.fr       */
+/*   Updated: 2023/01/29 14:27:34 by lbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,9 @@ int	eating(t_philo *philo)
 {
 	if (!use_forks(philo, 1))
 		return (0);
+	pthread_mutex_lock(&philo->mutex_last_meal);
 	philo->last_meal = get_time() - philo->data->start_t;
+	pthread_mutex_unlock(&philo->mutex_last_meal);
 	print_actions(philo, EAT);
 	if (!smart_sleep(philo->data->time_to_eat, philo))
 	{

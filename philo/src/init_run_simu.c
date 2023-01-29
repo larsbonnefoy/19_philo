@@ -6,7 +6,7 @@
 /*   By: lbonnefo <lbonnefo@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/27 19:03:39 by lbonnefo          #+#    #+#             */
-/*   Updated: 2023/01/27 19:30:45 by lbonnefo         ###   ########.fr       */
+/*   Updated: 2023/01/29 14:25:09 by lbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,8 @@ t_philo **init_philo(t_data *data)
 		philo_array[i]->right_fork = &data->mutex[(i + 1) % (data->active_phil)];
 		if (pthread_mutex_init(&philo_array[i]->data->mutex[i], NULL) != 0)
 			return (0); //free d'abord tous les philos -> fcts a faire
+		if (pthread_mutex_init(&philo_array[i]->mutex_last_meal, NULL) != 0)
+			return (0); 
 		i++;
 	}
 	return (philo_array);
