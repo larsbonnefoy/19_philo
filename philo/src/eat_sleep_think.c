@@ -36,9 +36,9 @@ void *eat_sleep_think(void *arg)
 		if (!sleeping(philo))
 			return (arg);
 	}
-	pthread_mutex_lock(philo->data->mutex_active);
+	pthread_mutex_lock(philo->data->mutex_active_philo);
 	philo->data->active_phil--;
-	pthread_mutex_unlock(philo->data->mutex_active);
+	pthread_mutex_unlock(philo->data->mutex_active_philo);
 	return (arg); 
 }
 

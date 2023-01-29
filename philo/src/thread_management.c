@@ -19,11 +19,16 @@ int		run_thread(t_philo **philo_array)
 	int		i;
 	t_philo *philo;
 	int		last_meal;
+	int 	nbr_philo;
 
 	i = 0;
 	philo = NULL;
 	data = philo_array[0]->data;
-	while (i < data->active_phil)
+	pthread_mutex_lock(philo->data->mutex_active_philo);
+	nbr_philo = data->active_phil;
+	pthread_mutex_unlock(philo->data->mutex_active_philo);
+	//active_phil peut changer 
+	while (i < nbr_philo)
 	{
 		philo = philo_array[i];
 		time_of_check = get_time() - philo->data->start_t;
@@ -59,12 +64,12 @@ int check_philo_alive(t_philo *philo)
 
 int	finished_eating(t_data *data, int nbr_start_philo)
 {
-	pthread_mutex_lock(data->mutex_active);
+	pthread_mutex_lock(data->mutex_active_philo);
 	if (data->active_phil != nbr_start_philo)
 	{
-		pthread_mutex_unlock(data->mutex_active);
+		pthread_mutex_unlock(data->mutex_active_philo);
 		return (1);
 	}	
-	pthread_mutex_unlock(data->mutex_active);
+	pthread_mutex_unlock(data->mutex_active_philo);
 	return (0);
 }

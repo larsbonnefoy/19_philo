@@ -26,7 +26,7 @@ int	init_data(int argc, char **argv, t_data *data)
 	data->philo_alive = 1;	
 	data->mutex = malloc(sizeof(pthread_mutex_t) * data->active_phil);
 	data->mutex_alive = malloc(sizeof(pthread_mutex_t) * 1);
-	data->mutex_active = malloc(sizeof(pthread_mutex_t));
+	data->mutex_active_philo = malloc(sizeof(pthread_mutex_t));
 	data->mutex_log = malloc(sizeof(pthread_mutex_t));
 	if (data->mutex == NULL)
 		return (0);
@@ -37,7 +37,7 @@ int	init_data(int argc, char **argv, t_data *data)
 		pthread_mutex_destroy(data->mutex_alive);
 		return (0); 
 	}
-	if (pthread_mutex_init(data->mutex_active, NULL) != 0)
+	if (pthread_mutex_init(data->mutex_active_philo, NULL) != 0)
 	{
 		pthread_mutex_destroy(data->mutex_alive);
 		pthread_mutex_destroy(data->mutex_log);
