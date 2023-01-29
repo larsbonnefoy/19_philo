@@ -28,10 +28,10 @@ int		run_thread(t_philo **philo_array)
 		time_of_check = get_time() - philo->data->start_t;
 		if (philo->last_meal + data->time_to_die < time_of_check)//si il vient de mourir, changer la value et end	
 		{
-			pthread_mutex_lock(&data->mutex_alive);
+			pthread_mutex_lock(data->mutex_alive);
 			data->philo_alive = 0;
 			printf("%d %d died\n", time_of_check, philo->id_philo);
-			pthread_mutex_unlock(&data->mutex_alive);
+			pthread_mutex_unlock(data->mutex_alive);
 			return (0);
 		}
 		i++;
@@ -43,24 +43,24 @@ int check_philo_alive(t_philo *philo)
 {
 	t_data *data = philo->data;
 	
-	pthread_mutex_lock(&data->mutex_alive);
+	pthread_mutex_lock(data->mutex_alive);
 	if (!data->philo_alive)
 	{
-		pthread_mutex_unlock(&data->mutex_alive);
+		pthread_mutex_unlock(data->mutex_alive);
 		return (0);	
 	}
-	pthread_mutex_unlock(&data->mutex_alive);
+	pthread_mutex_unlock(data->mutex_alive);
 	return (1);
 }
 
 int	finished_eating(t_data *data, int nbr_start_philo)
 {
-	pthread_mutex_lock(&data->mutex_active);
+	pthread_mutex_lock(data->mutex_active);
 	if (data->active_phil != nbr_start_philo)
 	{
-		pthread_mutex_unlock(&data->mutex_active);
+		pthread_mutex_unlock(data->mutex_active);
 		return (1);
 	}	
-	pthread_mutex_unlock(&data->mutex_active);
+	pthread_mutex_unlock(data->mutex_active);
 	return (0);
 }

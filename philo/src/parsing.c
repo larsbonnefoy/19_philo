@@ -24,17 +24,17 @@ int	init_data(int argc, char **argv, t_data *data)
 	data->time_to_sleep = ft_atoi_positive(argv[4]);
 	data->start_t = get_time(); 
 	data->philo_alive = 1;	
-	if (pthread_mutex_init(&data->mutex_alive, NULL) != 0)
+	if (pthread_mutex_init(data->mutex_alive, NULL) != 0)
 		return (-1); 
-	if (pthread_mutex_init(&data->log, NULL) != 0)
+	if (pthread_mutex_init(data->log, NULL) != 0)
 	{
-		pthread_mutex_destroy(&data->mutex_alive);
+		pthread_mutex_destroy(data->mutex_alive);
 		return (-1); 
 	}
-	if (pthread_mutex_init(&data->mutex_active, NULL) != 0)
+	if (pthread_mutex_init(data->mutex_active, NULL) != 0)
 	{
-		pthread_mutex_destroy(&data->mutex_alive);
-		pthread_mutex_destroy(&data->log);
+		pthread_mutex_destroy(data->mutex_alive);
+		pthread_mutex_destroy(data->log);
 		return (-1); 
 	}
 	if (argc == 6)

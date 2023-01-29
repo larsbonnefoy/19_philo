@@ -37,9 +37,9 @@ typedef struct	s_data {
 	pthread_mutex_t	*mutex; 
 	int				start_t;
 	int				philo_alive;
-	pthread_mutex_t	mutex_alive;
-	pthread_mutex_t	mutex_active;
-	pthread_mutex_t	log;
+	pthread_mutex_t	*mutex_alive;
+	pthread_mutex_t	*mutex_active;
+	pthread_mutex_t	*log;
 }				t_data;
 
 typedef struct	s_philo
