@@ -6,7 +6,7 @@
 /*   By: lbonnefo <lbonnefo@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/13 14:59:28 by lbonnefo          #+#    #+#             */
-/*   Updated: 2023/01/13 15:56:45 by lbonnefo         ###   ########.fr       */
+/*   Updated: 2023/01/30 16:57:42 by lbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,9 +51,9 @@ int	ft_atoi_positive(char *str)
 
 int	check_digit(char *str)
 {
-	int i;
+	int	i;
 
-	i = 0;	
+	i = 0;
 	while (str[i] == ' ' || (str[i] >= 9 && str[i] <= 13))
 		i++;
 	if (str[i] == '+' || str[i] == '-')
@@ -65,7 +65,6 @@ int	check_digit(char *str)
 	else
 		return (-1);
 }
-
 
 static int	ft_create_out(int i, const char *str)
 {
