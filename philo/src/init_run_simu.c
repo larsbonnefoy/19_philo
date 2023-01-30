@@ -6,7 +6,7 @@
 /*   By: lbonnefo <lbonnefo@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/27 19:03:39 by lbonnefo          #+#    #+#             */
-/*   Updated: 2023/01/29 14:25:09 by lbonnefo         ###   ########.fr       */
+/*   Updated: 2023/01/30 16:04:08 by lbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ t_philo **init_philo(t_data *data)
 			return (0); //free d'abord tous les philos -> fcts a faire
 		philo_array[i]->id_philo = i + 1;
 		philo_array[i]->last_meal = 0;
+		philo_array[i]->times_eaten = 0;
 		philo_array[i]->data = data;	
 		philo_array[i]->left_fork = &data->mutex[i];
 		philo_array[i]->right_fork = &data->mutex[(i + 1) % (data->active_phil)];
@@ -63,11 +64,9 @@ t_philo **init_philo(t_data *data)
 int launch_simu(t_philo **philo_array, t_data *data)
 {
 	int i;
-	int nbr_start_phil;
 
 	i = 0;
-	nbr_start_phil = data->active_phil;
-	while (i < nbr_start_phil)
+	while (i < data->active_phil)
 	{
 		if (pthread_create(&philo_array[i]->th, NULL, &eat_sleep_think, philo_array[i]) != 0)
 			return (0);
@@ -78,19 +77,11 @@ int launch_simu(t_philo **philo_array, t_data *data)
 
 int run_simu(t_philo **philo_array, t_data *data)
 {
-	int nbr_start_phil;
-
-	nbr_start_phil = data->active_phil;
 	while (1)
 	{
-		if (finished_eating(data, nbr_start_phil))
+		if (!(run_thread(philo_array, data)))
 		{
-			end_simu(philo_array, nbr_start_phil);
-			break;
-		}
-		if (!(run_thread(philo_array)))
-		{
-			end_simu(philo_array, nbr_start_phil);
+			end_simu(philo_array, data->active_phil);
 			break;
 		}		
 	}

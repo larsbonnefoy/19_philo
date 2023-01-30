@@ -6,7 +6,7 @@
 /*   By: lbonnefo <lbonnefo@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 12:59:22 by lbonnefo          #+#    #+#             */
-/*   Updated: 2023/01/29 12:49:51 by lbonnefo         ###   ########.fr       */
+/*   Updated: 2023/01/30 15:55:44 by lbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,17 +22,13 @@ int get_time()
 	return (mill_sec);
 }
 
-int	smart_sleep(int duration, t_philo *philo)
+int	p_sleep(int duration)
 {
 	int	start_time; 
 
 	start_time = get_time();
 	while (get_time() - duration < start_time)
-	{
-		if (!check_philo_alive(philo))
-			return (0);
 		usleep(100);
-	}
 	return (1);
 }
 
@@ -43,7 +39,7 @@ void print_actions(t_philo *philo, int action)
 	if (!check_philo_alive(philo))
 		return ;
 	action_time = get_time() - philo->data->start_t;
-	pthread_mutex_lock(philo->data->mutex_log);
+	pthread_mutex_lock(&philo->data->mutex_log);
 	if (action == 0)
 		printf("%d %d has taken a fork\n", action_time, philo->id_philo);
 	else if (action == 1)
@@ -52,7 +48,7 @@ void print_actions(t_philo *philo, int action)
 		printf("%d %d is sleeping\n", action_time, philo->id_philo);
 	else if (action == 3)
 		printf("%d %d is thinking\n", action_time, philo->id_philo);
-	pthread_mutex_unlock(philo->data->mutex_log);
+	pthread_mutex_unlock(&philo->data->mutex_log);
 }
 
 void free_all(t_philo **philo_array, t_data *data)

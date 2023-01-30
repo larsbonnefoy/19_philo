@@ -6,29 +6,29 @@
 /*   By: lbonnefo <lbonnefo@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/27 19:20:29 by lbonnefo          #+#    #+#             */
-/*   Updated: 2023/01/29 14:26:21 by lbonnefo         ###   ########.fr       */
+/*   Updated: 2023/01/30 15:46:11 by lbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int		run_thread(t_philo **philo_array)
+int		run_thread(t_philo **philo_array, t_data *data)
 {
-	t_data	*data;
 	int 	time_of_check;
 	int		i;
 	t_philo *philo;
 	int		last_meal;
-	int 	nbr_philo;
 
 	i = 0;
 	philo = NULL;
-	data = philo_array[0]->data;
-	pthread_mutex_lock(philo->data->mutex_active_philo);
-	nbr_philo = data->active_phil;
-	pthread_mutex_unlock(philo->data->mutex_active_philo);
-	//active_phil peut changer 
-	while (i < nbr_philo)
+	if (finished_eating(philo_array, data))
+	{
+		pthread_mutex_lock(&data->mutex_alive);
+		data->philo_alive = 0;
+		pthread_mutex_unlock(&data->mutex_alive);
+		return (0);
+	}
+	while (i < data->active_phil)
 	{
 		philo = philo_array[i];
 		time_of_check = get_time() - philo->data->start_t;
@@ -37,10 +37,10 @@ int		run_thread(t_philo **philo_array)
 		pthread_mutex_unlock(&philo->mutex_last_meal);
 		if (last_meal + data->time_to_die < time_of_check)//si il vient de mourir, changer la value et end	
 		{
-			pthread_mutex_lock(data->mutex_alive);
+			pthread_mutex_lock(&data->mutex_alive);
 			data->philo_alive = 0;
 			printf("%d %d died\n", time_of_check, philo->id_philo);
-			pthread_mutex_unlock(data->mutex_alive);
+			pthread_mutex_unlock(&data->mutex_alive);
 			return (0);
 		}
 		i++;
@@ -52,24 +52,35 @@ int check_philo_alive(t_philo *philo)
 {
 	t_data *data = philo->data;
 	
-	pthread_mutex_lock(data->mutex_alive);
+	pthread_mutex_lock(&data->mutex_alive);
 	if (!data->philo_alive)
 	{
-		pthread_mutex_unlock(data->mutex_alive);
+		pthread_mutex_unlock(&data->mutex_alive);
 		return (0);	
 	}
-	pthread_mutex_unlock(data->mutex_alive);
+	pthread_mutex_unlock(&data->mutex_alive);
 	return (1);
 }
 
-int	finished_eating(t_data *data, int nbr_start_philo)
+int	finished_eating(t_philo **philo_array, t_data *data)
 {
-	pthread_mutex_lock(data->mutex_active_philo);
-	if (data->active_phil != nbr_start_philo)
+	int i;
+	int philo_done_eating;
+	t_philo *philo;
+
+	philo_done_eating = 0;
+	i = 0;
+	while (i < data->active_phil)
 	{
-		pthread_mutex_unlock(data->mutex_active_philo);
+		philo = philo_array[i];
+		pthread_mutex_lock(&philo->mutex_last_meal);
+		if (philo->times_eaten >= data->amount_to_eat && data->amount_to_eat != -1)
+			philo_done_eating++;
+		pthread_mutex_unlock(&philo->mutex_last_meal);
+		i++;
+	}
+	if (philo_done_eating == data->active_phil)
 		return (1);
-	}	
-	pthread_mutex_unlock(data->mutex_active_philo);
-	return (0);
+	else
+		return (0);
 }

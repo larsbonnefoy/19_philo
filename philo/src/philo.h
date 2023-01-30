@@ -6,7 +6,7 @@
 /*   By: lbonnefo <lbonnefo@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/11 14:56:43 by lbonnefo          #+#    #+#             */
-/*   Updated: 2023/01/29 14:24:56 by lbonnefo         ###   ########.fr       */
+/*   Updated: 2023/01/30 16:08:12 by lbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,15 +37,16 @@ typedef struct	s_data {
 	pthread_mutex_t	*mutex; 
 	int				start_t;
 	int				philo_alive;
-	pthread_mutex_t	*mutex_alive;
-	pthread_mutex_t	*mutex_active_philo;
-	pthread_mutex_t	*mutex_log;
+	pthread_mutex_t	mutex_alive;
+	pthread_mutex_t	mutex_active_philo;
+	pthread_mutex_t	mutex_log;
 }				t_data;
 
 typedef struct	s_philo
 {
 	int				id_philo;
 	int				last_meal;
+	int				times_eaten;
 	pthread_t		th;
 	pthread_mutex_t *left_fork;
 	pthread_mutex_t *right_fork;
@@ -62,9 +63,9 @@ int		check_digit(char *str);
 int		init_and_launch_simu(t_data *data);
 
 //manage thread
-int		run_thread(t_philo **philo_array);
+int		run_thread(t_philo **philo_array, t_data *data);
 int		check_philo_alive(t_philo *philo);
-int		finished_eating(t_data *data, int nbr_start_philo);
+int		finished_eating(t_philo **philo, t_data *data);
 
 //routine
 void	*eat_sleep_think(void *arg);
@@ -72,7 +73,7 @@ int		use_forks(t_philo *philo, int take_forks);
 
 //utils
 int		get_time();
-int		smart_sleep(int duration, t_philo *philo);
+int		p_sleep(int duration);
 void	print_actions(t_philo *philo, int action);
 void	free_all(t_philo **philo_array,t_data *data);
 

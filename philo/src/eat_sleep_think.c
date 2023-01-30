@@ -6,39 +6,36 @@
 /*   By: lbonnefo <lbonnefo@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/27 19:08:30 by lbonnefo          #+#    #+#             */
-/*   Updated: 2023/01/29 14:27:34 by lbonnefo         ###   ########.fr       */
+/*   Updated: 2023/01/30 16:19:48 by lbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include"philo.h"
+#include "philo.h"
 
-int	eating(t_philo *philo);
-int	use_forks(t_philo *philo, int take_forks);
-int sleeping(t_philo *philo);
+int		eating(t_philo *philo);
+int		use_forks(t_philo *philo, int take_forks);
+void	sleeping(t_philo *philo);
 
 void *eat_sleep_think(void *arg)
 {
 	t_philo *philo;
-	int	eat_lft;
-	int	eat_max;
+	int philo_alive;
 
 	philo = (t_philo *)arg;	
-	eat_lft = 0;
-	eat_max = philo->data->amount_to_eat;
 	if (philo->id_philo % 2 == 0 )
-		smart_sleep(philo->data->time_to_eat / 2, philo);
-	while ((eat_lft < eat_max || eat_max == -1) && (philo->data->philo_alive))
+		p_sleep(philo->data->time_to_eat / 2);
+	pthread_mutex_lock(&philo->data->mutex_alive);
+	philo_alive = philo->data->philo_alive;
+	pthread_mutex_unlock(&philo->data->mutex_alive);
+	while (philo_alive)
 	{
 		print_actions(philo, THINK);
-		if (!eating(philo))
-			return (arg);			
-		eat_lft++;
-		if (!sleeping(philo))
-			return (arg);
+		eating(philo);
+		sleeping(philo);
+		pthread_mutex_lock(&philo->data->mutex_alive);
+		philo_alive = philo->data->philo_alive;
+		pthread_mutex_unlock(&philo->data->mutex_alive);
 	}
-	pthread_mutex_lock(philo->data->mutex_active_philo);
-	philo->data->active_phil--;
-	pthread_mutex_unlock(philo->data->mutex_active_philo);
 	return (arg); 
 }
 
@@ -50,12 +47,13 @@ int	eating(t_philo *philo)
 	philo->last_meal = get_time() - philo->data->start_t;
 	pthread_mutex_unlock(&philo->mutex_last_meal);
 	print_actions(philo, EAT);
-	if (!smart_sleep(philo->data->time_to_eat, philo))
+	p_sleep(philo->data->time_to_eat);
+	if (philo->data->amount_to_eat != -1)
 	{
-		pthread_mutex_unlock(philo->right_fork);
-		pthread_mutex_unlock(philo->left_fork);
-		return (0);
-	}	
+		pthread_mutex_lock(&philo->mutex_last_meal);
+		philo->times_eaten++;
+		pthread_mutex_unlock(&philo->mutex_last_meal);
+	}
 	use_forks(philo, 0);	
 	return (1);
 }
@@ -68,7 +66,7 @@ int	use_forks(t_philo *philo, int take_forks)
 		print_actions(philo, FORK);
 		if (philo->right_fork == philo->left_fork)
 		{	
-			smart_sleep(philo->data->time_to_die, philo);
+			p_sleep(philo->data->time_to_die);
 			pthread_mutex_unlock(philo->right_fork);
 			return (0);
 		}
@@ -83,10 +81,8 @@ int	use_forks(t_philo *philo, int take_forks)
 	return (1); 
 }
 
-int sleeping(t_philo *philo)
+void sleeping(t_philo *philo)
 {
 	print_actions(philo, SLEEP);
-	if (!smart_sleep(philo->data->time_to_sleep, philo))
-		return (0);
-	return (1);
+	p_sleep(philo->data->time_to_sleep);
 }
