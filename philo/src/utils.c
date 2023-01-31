@@ -6,7 +6,7 @@
 /*   By: lbonnefo <lbonnefo@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 12:59:22 by lbonnefo          #+#    #+#             */
-/*   Updated: 2023/01/30 17:08:42 by lbonnefo         ###   ########.fr       */
+/*   Updated: 2023/01/31 14:58:55 by lbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,37 +32,56 @@ int	p_sleep(int duration)
 	return (1);
 }
 
-void	print_actions(t_philo *philo, int action)
+void	print_actions(t_philo *philo, char *message)
 {
 	int	action_time;
 
-	if (!check_philo_alive(philo))
+	if (!check_run_simu(philo))
 		return ;
 	action_time = get_time() - philo->data->start_t;
 	pthread_mutex_lock(&philo->data->mutex_log);
-	if (action == 0)
-		printf("%d %d has taken a fork\n", action_time, philo->id_philo);
-	else if (action == 1)
-		printf("%d %d is eating\n", action_time, philo->id_philo);
-	else if (action == 2)
-		printf("%d %d is sleeping\n", action_time, philo->id_philo);
-	else if (action == 3)
-		printf("%d %d is thinking\n", action_time, philo->id_philo);
+	printf("%d %d %s\n", action_time, philo->id_philo, message);
 	pthread_mutex_unlock(&philo->data->mutex_log);
 }
 
-void	free_all(t_philo **philo_array, t_data *data)
+t_philo **free_and_destroy_philo(t_philo **ph_arr, int philo_to_free, int code)
 {
 	int	i;
-	int	nbr_philo;
 
 	i = 0;
-	nbr_philo = philo_array[0]->data->nbr_phil;
-	while (i < nbr_philo)
+	while (i < philo_to_free)
 	{
-		free(philo_array[i]);
+		if (code == 0)
+		{
+			pthread_mutex_destroy(&ph_arr[i]->mutex_last_meal);
+			code++;
+		}
+		if (code == 1)
+		{
+			pthread_mutex_destroy(ph_arr[i]->left_fork);
+			code++;
+		}
+		if (code == 2)
+			free(ph_arr[i]);
 		i++;
 	}
-	free(philo_array);
-	free(data->mutex);
+	free(ph_arr);
+	return (NULL);
+}
+
+int	free_and_destroy_data(t_data *data, int i)
+{
+	int action_code = i;
+
+	while (action_code < 3)
+	{
+		if (action_code == 0)
+			pthread_mutex_destroy(&data->mutex_log);
+		if (action_code == 1)
+			pthread_mutex_destroy(&data->mutex_run_sim);
+		if (action_code == 2)
+			free(data->mutex);
+		action_code++;
+	}
+	return (0);
 }

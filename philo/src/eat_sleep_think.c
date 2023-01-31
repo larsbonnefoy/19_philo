@@ -6,7 +6,7 @@
 /*   By: lbonnefo <lbonnefo@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/27 19:08:30 by lbonnefo          #+#    #+#             */
-/*   Updated: 2023/01/30 17:06:40 by lbonnefo         ###   ########.fr       */
+/*   Updated: 2023/01/31 13:59:53 by lbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,22 +19,22 @@ void	sleeping(t_philo *philo);
 void	*routine(void *arg)
 {
 	t_philo	*philo;
-	int		philo_alive;
+	int		run_simu;
 
 	philo = (t_philo *)arg;
 	if (philo->id_philo % 2 == 0)
 		p_sleep(philo->data->time_to_eat / 2);
-	pthread_mutex_lock(&philo->data->mutex_alive);
-	philo_alive = philo->data->philo_alive;
-	pthread_mutex_unlock(&philo->data->mutex_alive);
-	while (philo_alive)
+	pthread_mutex_lock(&philo->data->mutex_run_sim);
+	run_simu = philo->data->run_simu;
+	pthread_mutex_unlock(&philo->data->mutex_run_sim);
+	while (run_simu)
 	{
 		print_actions(philo, THINK);
 		eating(philo);
 		sleeping(philo);
-		pthread_mutex_lock(&philo->data->mutex_alive);
-		philo_alive = philo->data->philo_alive;
-		pthread_mutex_unlock(&philo->data->mutex_alive);
+		pthread_mutex_lock(&philo->data->mutex_run_sim);
+		run_simu = philo->data->run_simu;
+		pthread_mutex_unlock(&philo->data->mutex_run_sim);
 	}
 	return (arg);
 }
@@ -68,7 +68,8 @@ int	use_forks(t_philo *philo, int take_forks)
 		{	
 			p_sleep(philo->data->time_to_die);
 			pthread_mutex_unlock(philo->right_fork);
-			return (0);
+			print_actions(philo, DIED);
+			return (set_end_simu(philo->data));
 		}
 		pthread_mutex_lock(philo->left_fork);
 		print_actions(philo, FORK);

@@ -6,7 +6,7 @@
 /*   By: lbonnefo <lbonnefo@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/11 14:56:43 by lbonnefo          #+#    #+#             */
-/*   Updated: 2023/01/30 17:06:02 by lbonnefo         ###   ########.fr       */
+/*   Updated: 2023/01/31 14:57:29 by lbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,11 @@
 # include <sys/time.h>
 # include <limits.h>
 
-# define FORK 0
-# define EAT 1
-# define SLEEP 2
-# define THINK 3
+# define FORK "has taken a fork"
+# define EAT "is eating"
+# define SLEEP "is sleeping"
+# define THINK "is thinking"
+# define DIED "died"
 
 typedef struct timeval	t_timeval;
 
@@ -36,12 +37,12 @@ typedef struct s_data
 	int				meals;
 	pthread_mutex_t	*mutex;
 	int				start_t;
-	int				philo_alive;
-	pthread_mutex_t	mutex_alive;
+	int				run_simu;
+	pthread_mutex_t	mutex_run_sim;
 	pthread_mutex_t	mutex_log;
 }				t_data;
 
-typedef struct s_philo
+typedef struct s_phil
 {
 	int				id_philo;
 	int				last_meal;
@@ -57,14 +58,16 @@ typedef struct s_philo
 int		ft_atoi_positive(char *str);
 int		init_data(int argc, char **argv, t_data *data);
 int		check_digit(char *str);
+int		ft_error(char *error_msg);
 
 //init_run_simu.c
 int		init_and_launch_simu(t_data *data);
 
 //manage thread
 int		run_thread(t_philo **philo_array, t_data *data);
-int		check_philo_alive(t_philo *philo);
+int		check_run_simu(t_philo *philo);
 int		finished_eating(t_philo **philo, t_data *data);
+int		set_end_simu(t_data *data);
 
 //routine
 void	*routine(void *arg);
@@ -73,7 +76,8 @@ int		use_forks(t_philo *philo, int take_forks);
 //utils
 int		get_time(void);
 int		p_sleep(int duration);
-void	print_actions(t_philo *philo, int action);
-void	free_all(t_philo **philo_array, t_data *data);
+void	print_actions(t_philo *philo, char *message);
+t_philo	**free_and_destroy_philo(t_philo **ph_arr, int philo_to_free, int code);
+int		free_and_destroy_data(t_data *data, int i);
 
 #endif

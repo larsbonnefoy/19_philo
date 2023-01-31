@@ -6,7 +6,7 @@
 /*   By: lbonnefo <lbonnefo@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/30 17:09:10 by lbonnefo          #+#    #+#             */
-/*   Updated: 2023/01/30 17:09:12 by lbonnefo         ###   ########.fr       */
+/*   Updated: 2023/01/31 14:59:47 by lbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,12 @@ int	init_and_launch_simu(t_data *data)
 
 	philo_array = init_philo(data);
 	if (philo_array == NULL)
-		return (0);
+		return (free_and_destroy_data(data, 0));
 	if (!launch_simu(philo_array, data))
 		return (0);
 	if (!run_simu(philo_array, data))
 		return (0);
-	free_all(philo_array, data);
+	free_and_destroy_philo(philo_array, data->nbr_phil, 0);
 	return (1);
 }
 
@@ -39,13 +39,13 @@ t_philo	**init_philo(t_data *data)
 
 	philo_array = malloc(sizeof(t_philo *) * data->nbr_phil);
 	if (philo_array == NULL)
-		return (NULL);
+		return (0);
 	i = 0;
 	while (i < data->nbr_phil)
 	{	
 		philo_array[i] = malloc(sizeof(t_philo));
 		if (philo_array[i] == NULL)
-			return (0);
+			return (free_and_destroy_philo(philo_array, i, 2));
 		philo_array[i]->id_philo = i + 1;
 		philo_array[i]->last_meal = 0;
 		philo_array[i]->times_eaten = 0;
@@ -53,9 +53,9 @@ t_philo	**init_philo(t_data *data)
 		philo_array[i]->left_fork = &data->mutex[i];
 		philo_array[i]->right_fork = &data->mutex[(i + 1) % (data->nbr_phil)];
 		if (pthread_mutex_init(&philo_array[i]->data->mutex[i], NULL) != 0)
-			return (0);
+			return (free_and_destroy_philo(philo_array, i, 2));
 		if (pthread_mutex_init(&philo_array[i]->mutex_last_meal, NULL) != 0)
-			return (0);
+			return (free_and_destroy_philo(philo_array, i, 1));
 		i++;
 	}
 	return (philo_array);
