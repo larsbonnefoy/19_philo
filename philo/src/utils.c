@@ -6,7 +6,7 @@
 /*   By: lbonnefo <lbonnefo@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 12:59:22 by lbonnefo          #+#    #+#             */
-/*   Updated: 2023/01/31 14:58:55 by lbonnefo         ###   ########.fr       */
+/*   Updated: 2023/01/31 15:34:09 by lbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,11 +44,13 @@ void	print_actions(t_philo *philo, char *message)
 	pthread_mutex_unlock(&philo->data->mutex_log);
 }
 
-t_philo **free_and_destroy_philo(t_philo **ph_arr, int philo_to_free, int code)
+t_philo	**free_and_destroy_philo(t_philo **ph_arr, int philo_to_free, int code)
 {
 	int	i;
 
 	i = 0;
+	if (code != 0)
+		ft_error("memory issue");
 	while (i < philo_to_free)
 	{
 		if (code == 0)
@@ -69,19 +71,21 @@ t_philo **free_and_destroy_philo(t_philo **ph_arr, int philo_to_free, int code)
 	return (NULL);
 }
 
-int	free_and_destroy_data(t_data *data, int i)
+int	free_and_destroy_data(t_data *data, int action_code)
 {
-	int action_code = i;
-
-	while (action_code < 3)
+	if (action_code != 0)
+		ft_error("memory issue");
+	if (action_code == 0)
 	{
-		if (action_code == 0)
-			pthread_mutex_destroy(&data->mutex_log);
-		if (action_code == 1)
-			pthread_mutex_destroy(&data->mutex_run_sim);
-		if (action_code == 2)
-			free(data->mutex);
+		pthread_mutex_destroy(&data->mutex_log);
 		action_code++;
 	}
+	if (action_code == 1)
+	{
+		pthread_mutex_destroy(&data->mutex_run_sim);
+		action_code++;
+	}
+	if (action_code == 2)
+		free(data->mutex);
 	return (0);
 }

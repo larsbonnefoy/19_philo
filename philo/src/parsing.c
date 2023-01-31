@@ -6,7 +6,7 @@
 /*   By: lbonnefo <lbonnefo@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/13 15:09:24 by lbonnefo          #+#    #+#             */
-/*   Updated: 2023/01/31 14:16:52 by lbonnefo         ###   ########.fr       */
+/*   Updated: 2023/01/31 15:33:51 by lbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ int	check_input(int argc, char **argv)
 	return (1);
 }
 
-int ft_error(char *error_msg)
+int	ft_error(char *error_msg)
 {
 	printf("Error : %s\n", error_msg);
 	return (0);
