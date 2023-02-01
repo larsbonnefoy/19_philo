@@ -6,7 +6,7 @@
 /*   By: lbonnefo <lbonnefo@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/30 17:09:10 by lbonnefo          #+#    #+#             */
-/*   Updated: 2023/01/31 15:33:32 by lbonnefo         ###   ########.fr       */
+/*   Updated: 2023/02/01 16:21:01 by lbonnefo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,8 +68,20 @@ int	launch_simu(t_philo **p_arr, t_data *data)
 	i = 0;
 	while (i < data->nbr_phil)
 	{
-		if (pthread_create(&p_arr[i]->th, NULL, &routine, p_arr[i]) != 0)
+		if ((pthread_create(&p_arr[i]->th, NULL, &routine, p_arr[i]) != 0))
+		{
+			set_end_simu(data);
+			i--;
+			while (i >= 0)
+			{
+				pthread_join(p_arr[i]->th, (void **) &p_arr[i]);
+				i--;
+			}
+			ft_error("Unable to allocate space for thread");
+			free_and_destroy_philo(p_arr, data->nbr_phil, 0);
+			free_and_destroy_data(data, 0);
 			return (0);
+		}
 		i++;
 	}
 	return (1);
